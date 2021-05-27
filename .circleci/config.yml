@@ -6,8 +6,7 @@ defaults: &image
 
 Jobs:
   build:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *image
     steps:
       - checkout
       - run: npm i
@@ -16,8 +15,7 @@ Jobs:
           paths: /src/node_modules
       - run: npm run lint
   test:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *image
     steps:
     - checkout
     - restore_cache:
@@ -26,8 +24,7 @@ Jobs:
     - run: npm i
     - run: npm run test
   analyze:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *image
     steps:
     - checkout
     - restore_cache:
@@ -41,7 +38,7 @@ workflows:
       - build
       - test:
           requires:
-            - "build"
+            - build
       - analyze:
           requires:
-            - "test"
+            - test
